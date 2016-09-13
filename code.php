@@ -161,7 +161,7 @@ if ( ! $_GET['text'] ) {
 
 if ( $_GET['text'] ) {
 	$_GET['text'] = preg_replace_callback(
-		"/(0x[0-9A-F]{2})/",
+		"/(0x[0-9A-F]{,3})/ui",
 		function( $matches ) {
 			return chr( hexdec( $matches[0] ) );
 		},
