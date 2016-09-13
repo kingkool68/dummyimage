@@ -58,23 +58,19 @@ $x_pieces = explode( '/', $x );
 include("color.class.php");
 
 // Find the background color which is always after the 2nd slash in the url
-$bg_color = explode( '.', $x_pieces[1] );
-$bg_color = $bg_color[0];
-
-// Default to gray if no background color is set
-if ( ! $bg_color ) {
-	$bg_color = ccc;
+$bg_color = 'ccc';
+if ( isset( $x_pieces[1] ) ) {
+	$bg_color = explode( '.', $x_pieces[1] );
+	$bg_color = $bg_color[0];
 }
 $background = new color();
 $background->set_hex( $bg_color );
 
 // Find the foreground color which is always after the 3rd slash in the url
-$fg_color = explode( '.', $x_pieces[2] );
-$fg_color = $fg_color[0];
-
-// Default to black if no foreground color is set
-if ( ! $fg_color ) {
-	$fg_color = 000;
+$fg_color = '000';
+if ( isset( $x_pieces[2] ) ) {
+	$fg_color = explode( '.', $x_pieces[2] );
+	$fg_color = $fg_color[0];
 }
 $foreground = new color();
 $foreground->set_hex($fg_color);
@@ -82,7 +78,7 @@ $foreground->set_hex($fg_color);
 // Determine the file format. This can be anywhere in the URL.
 $file_format = 'png';
 preg_match_all( '/(gif|jpg|jpeg)/', $x, $result );
-if ( $result[0][0] ) {
+if ( isset( $result[0] ) && isset( $result[0][0] ) && $result[0][0] ) {
 	$file_format = $result[0][0];
 }
 
@@ -164,7 +160,6 @@ if ( ! $_GET['text'] ) {
 }
 
 if ( $_GET['text'] ) {
-	$_GET['text'] = preg_replace( "#(0x[0-9A-F]{2})#e", "chr(hexdec('\\1'))", $_GET['text'] );
 	$_GET['text'] = preg_replace_callback(
 		"/(0x[0-9A-F]{2})/",
 		function( $matches ) {
