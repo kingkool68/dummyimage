@@ -165,6 +165,13 @@ if ( ! $_GET['text'] ) {
 
 if ( $_GET['text'] ) {
 	$_GET['text'] = preg_replace( "#(0x[0-9A-F]{2})#e", "chr(hexdec('\\1'))", $_GET['text'] );
+	$_GET['text'] = preg_replace_callback(
+		"/(0x[0-9A-F]{2})/",
+		function( $matches ) {
+			return chr( hexdec( $matches[0] ) );
+		},
+		$_GET['text']
+	);
 	$lines = substr_count( $_GET['text'], '|' );
 	$text = preg_replace( '/\|/i', "\n", $_GET['text'] );
 } else {
