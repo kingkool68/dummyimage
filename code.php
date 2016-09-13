@@ -200,4 +200,3 @@ switch ($file_format) {
 
 imageDestroy($img);//Destroy the image to free memory.
 die();
-?>
