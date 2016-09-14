@@ -64,8 +64,10 @@ include("color.class.php");
 // Find the background color which is always after the 2nd slash in the url
 $bg_color = 'ccc';
 if ( isset( $x_pieces[1] ) ) {
-	$bg_color = explode( '.', $x_pieces[1] );
-	$bg_color = $bg_color[0];
+	$bg_color_parts = explode( '.', $x_pieces[1] );
+	if ( isset( $bg_color_parts[0] ) && ! empty( $bg_color_parts[0] ) ) {
+		$bg_color = $bg_color_parts[0];
+	}
 }
 $background = new color();
 $background->set_hex( $bg_color );
@@ -73,8 +75,10 @@ $background->set_hex( $bg_color );
 // Find the foreground color which is always after the 3rd slash in the url
 $fg_color = '000';
 if ( isset( $x_pieces[2] ) ) {
-	$fg_color = explode( '.', $x_pieces[2] );
-	$fg_color = $fg_color[0];
+	$fg_color_parts = explode( '.', $x_pieces[2] );
+	if ( isset( $fg_color_parts[0] ) && ! empty( $fg_color_parts[0] ) ) {
+		$fg_color = $fg_color_parts[0];
+	}
 }
 $foreground = new color();
 $foreground->set_hex($fg_color);
