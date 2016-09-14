@@ -24,8 +24,9 @@ if ( top != self ) { top.location.href = 'http://dummyimage.com/'; }
 <body>
 <h1>Dynamic Dummy Image Generator</h1>
 <cite>by <a href="#about">Russell Heimlich</a> (<a href="https://twitter.com/kingkool68">@kingkool68</a>)</cite>
-<div id="preview"> <img src="600x400/000/fff">
-</div>
+<a id="preview" href="600x400/000/fff" target="_blank">
+	<img src="600x400/000/fff">
+</a>
 <form id="demo">
   <h2><a href="600x400/000/fff" target="_blank">600x400/000/fff</a></h2>
   <label for="size">Size
@@ -476,6 +477,7 @@ jQuery(document).ready(function($) {
 			}
 		});
 		$('#preview img').attr('src',url);
+		$('#preview').attr('href', url);
 		$('#demo a').attr('href',url).text(url);
 	}
 

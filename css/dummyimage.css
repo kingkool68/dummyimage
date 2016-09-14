@@ -107,6 +107,11 @@ margin-top:0.2em;
 text-align:center;
 padding:3em 0 1em;
 min-height:15em;
+display:block;
+}
+#preview img {
+max-width:100%;
+height:auto;
 }
 .seperator {
 float:left;
