@@ -162,12 +162,14 @@ $img = imageCreate( $width, $height );
 $bg_color = imageColorAllocate( $img, $background->get_rgb('r'), $background->get_rgb('g'), $background->get_rgb('b') );
 $fg_color = imageColorAllocate( $img, $foreground->get_rgb('r'), $foreground->get_rgb('g'), $foreground->get_rgb('b') );
 
-if ( ! $_GET['text'] ) {
-	preg_match( '/&text=(.+)/i', $_GET["x"], $matches );
-	$_GET['text'] = urldecode( $matches[1] );
+if ( empty( $_GET['text'] ) || ! isset( $_GET['text'] ) ) {
+	preg_match( '/&text=(.+)/i', $_GET['x'], $matches );
+	if ( isset( $matches[1] ) ) {
+		$_GET['text'] = urldecode( $matches[1] );
+	}
 }
 
-if ( $_GET['text'] ) {
+if ( isset( $_GET['text'] ) && $_GET['text'] ) {
 	$_GET['text'] = preg_replace_callback(
 		"/(0x[0-9A-F]{,3})/ui",
 		function( $matches ) {
@@ -203,14 +205,16 @@ imageFilledRectangle( $img, 0, 0, $width, $height, $bg_color );
 //Create and positions the text
 imagettftext( $img, $fontsize, $text_angle, $textX, $textY, $fg_color, $font, $text );
 
-// Caching Headers
-$offset = 60 * 60 * 24 * 90; //90 Days
-header( 'Cache-control: max-age=' . $offset );
-// Set a far future expire date. This keeps the image locally cached by the user for less hits to the server
-header( 'Expires: ' . gmdate( DATE_RFC1123, time() + $offset ) );
-header( 'Last-Modified: ' . gmdate( 'D, d M Y H:i:s', time() ) . ' GMT' );
-// Set the header so the browser can interpret it as an image and not a bunch of weird text
-header( 'Content-type: image/' . $file_format);
+
+function process_output_buffer( $buffer = '' ) {
+	$buffer = trim( $buffer );
+	if( strlen( $buffer ) == 0 ) {
+		return '';
+	}
+	return $buffer;
+}
+// Start output buffering so we can determine the Content-Length of the file
+ob_start( 'process_output_buffer' );
 
 // Create the final image based on the provided file format.
 switch ( $file_format ) {
@@ -218,10 +222,25 @@ switch ( $file_format ) {
 		imagegif( $img );
 	break;
 	case 'png':
-	   imagepng( $img );
+		imagepng( $img );
 	break;
 	case 'jpg':
 	case 'jpeg':
 		imagejpeg( $img );
 	break;
 }
+$output = ob_get_contents();
+
+ob_end_clean();
+
+// Caching Headers
+$offset = 60 * 60 * 24 * 90; //90 Days
+header( 'Cache-Control: public, max-age=' . $offset );
+// Set a far future expire date. This keeps the image locally cached by the user for less hits to the server
+header( 'Expires: ' . gmdate( DATE_RFC1123, time() + $offset ) );
+header( 'Last-Modified: ' . gmdate( 'D, d M Y H:i:s', time() ) . ' GMT' );
+// Set the header so the browser can interpret it as an image and not a bunch of weird text
+header( 'Content-type: image/' . $file_format );
+header( 'Content-Length: ' . strlen( $output ) );
+
+echo $output;
