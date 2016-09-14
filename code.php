@@ -51,7 +51,11 @@ function imagettfbbox_t( $size, $text_angle, $fontfile, $text ){
 }
 
 // Get the query string from the URL. x would = 600x400 if the url was http://dummyimage.com/600x400
-$x = strtolower( $_GET["x"] );
+$x = strtolower( $_GET['x'] );
+// If the first character of $x is a / then get rid of it
+if ( $x[0] == '/' ) {
+	$x = ltrim( $x, '/' );
+}
 $x_pieces = explode( '/', $x );
 
 // To easily manipulate colors between different formats
