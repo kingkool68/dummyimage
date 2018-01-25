@@ -177,7 +177,7 @@ if ( isset( $_GET['text'] ) && $_GET['text'] ) {
 		},
 		$_GET['text']
 	);
-	$lines = substr_count( $_GET['text'], '|' );
+	$lines = substr_count( $_GET['text'], '|' ) + 1;
 	$text = preg_replace( '/\|/i', "\n", $_GET['text'] );
 } else {
 	$lines = 1;
@@ -186,19 +186,21 @@ if ( isset( $_GET['text'] ) && $_GET['text'] ) {
 	$text = $width." &#215; ".$height;
 }
 
+// Michael Smith: Added line_spacing variable for caculating center height and fontsize on multiline text
+$line_spacing = $lines > 1 ? 1.3 : 0.75;
 // Ric Ewing: I modified this to behave better with long or narrow images and condensed the resize code to a single line
-$fontsize = max( min( $width / strlen($text) * 1.15, $height * 0.5 ), 5 );
+$fontsize = max( min( $width / strlen($text) * 1.15, $height * 0.5 / $lines / $line_spacing ), 5 );
 // Pass these variable to a function to calculate the position of the bounding box
 $textBox = imagettfbbox_t($fontsize, $text_angle, $font, $text);
 // Calculate the width of the text box by subtracting the upper right "X" position with the lower left "X" position
-$textWidth = ceil( ( $textBox[4] - $textBox[1] ) * 1.07 );
+$textWidth = ceil( ( $textBox[4] - $textBox[0] ) * 1.07 );
 // Calculate the height of the text box by adding the absolute value of the upper left "Y" position with the lower left "Y" position
-$textHeight = ceil( ( abs( $textBox[7] ) + abs( $textBox[1] ) ) * 1 );
+$textHeight = ceil( abs( $textBox[7] ) + abs( $textBox[1] ) * 1 );
 
 //Determine where to set the X position of the text box so it is centered
 $textX = ceil( ( $width - $textWidth ) / 2 );
 //Determine where to set the Y position of the text box so it is centered
-$textY = ceil( ( $height - $textHeight ) / 2 + $textHeight );
+$textY = ceil( ( $height - $textHeight ) / 2 + ($textHeight / ($lines * $line_spacing * 1.3)) );
 
 //Create the rectangle with the specified background color
 imageFilledRectangle( $img, 0, 0, $width, $height, $bg_color );
