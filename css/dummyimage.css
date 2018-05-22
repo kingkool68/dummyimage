@@ -189,7 +189,7 @@ margin-bottom:1em;
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", Helvetica, Arial, sans-serif;
   display: block;
   overflow: hidden;
-  margin-bottom: 20px;
+  margin-bottom: 0;
   max-width: var(--width);
   border-radius: 4px;
   text-align: center;
