@@ -169,7 +169,7 @@ if ( empty( $_GET['text'] ) || ! isset( $_GET['text'] ) ) {
 	}
 }
 
-if ( isset( $_GET['text'] ) && $_GET['text'] ) {
+if ( isset( $_GET['text'] ) && ($_GET['text'] || $_GET['text']==0 || $_GET['text']=="0") ) {
 	$_GET['text'] = preg_replace_callback(
 		"/(0x[0-9A-F]{,3})/ui",
 		function( $matches ) {
