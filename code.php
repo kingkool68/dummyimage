@@ -23,6 +23,8 @@ THE SOFTWARE.
 
 */
 
+use App\CircleCrop;
+
 if ( isset( $_SERVER['HTTP_IF_MODIFIED_SINCE'] ) ) {
 	// If the browser has a cached version of this image, send 304
 	header( 'Last-Modified: ' . $_SERVER['HTTP_IF_MODIFIED_SINCE'], true, 304 );
@@ -200,8 +202,16 @@ $textX = ceil( ( $width - $textWidth ) / 2 );
 //Determine where to set the Y position of the text box so it is centered
 $textY = ceil( ( $height - $textHeight ) / 2 + $textHeight );
 
-//Create the rectangle with the specified background color
-imageFilledRectangle( $img, 0, 0, $width, $height, $bg_color );
+
+if (isset($_GET['circular']) && $_GET['circular'] == 'true') {
+    $width = imagesx($img);
+    $height = imagesy($img);
+    $img = new CircleCrop($img, $width, $height);
+} else {
+    //Create the rectangle with the specified background color
+    imageFilledRectangle( $img, 0, 0, $width, $height, $bg_color );
+}
+
 //Create and positions the text
 imagettftext( $img, $fontsize, $text_angle, $textX, $textY, $fg_color, $font, $text );
 
