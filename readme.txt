@@ -12,8 +12,12 @@ Sample .htaccess file
 	If you can't see a .htaccess file (Windows hides it by default) copy htaccess.txt to your server and rename it to .htaccess 
 
 Developing In Docker
-	 docker build -t dummyimage .
-	 docker run -p 80:80 -v $(pwd):/var/www/html dummyimage:latest
+	To build and run locally run:
+
+	 `docker build -t dummyimage .`
+	 `docker run -p 80:80 -v $(pwd):/var/www/html dummyimage:latest`
+
+	Code changes in your host directory will be reflected when you reload http://localhost
 	
 Credit
 	Code written by Russell Heimlich - http://www.russellheimlich.com/blog
