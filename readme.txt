@@ -10,6 +10,10 @@ What do I do?
 
 Sample .htaccess file
 	If you can't see a .htaccess file (Windows hides it by default) copy htaccess.txt to your server and rename it to .htaccess 
+
+Developing In Docker
+	 docker build -t dummyimage .
+	 docker run -p 80:80 -v $(pwd):/var/www/html dummyimage:latest
 	
 Credit
 	Code written by Russell Heimlich - http://www.russellheimlich.com/blog
