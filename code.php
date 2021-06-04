@@ -69,13 +69,94 @@ function imagettfbbox_t( $size, $text_angle, $fontfile, $text ) {
 	return $ret;
 }
 
-// Get the query string from the URL. x would = 600x400 if the url was http://dummyimage.com/600x400
+// Get the query string from the URL. x would = 600x400 if the url was https://dummyimage.com/600x400
 $x = strtolower( $_GET['x'] );
-// If the first character of $x is a / then get rid of it
-if ( $x[0] == '/' ) {
-	$x = ltrim( $x, '/' );
-}
+// Strip / if it's the first character
+$x        = ltrim( $x, '/' );
 $x_pieces = explode( '/', $x );
+
+/**
+ * Find the dimensions
+ */
+// Dimensions are always the first paramter in the URL
+$dimensions = explode( 'x', $x_pieces[0] );
+
+// Filter out any characters that are not numbers, colons or decimal points
+$width  = preg_replace( '/[^\d:\.]/i', '', $dimensions[0] );
+$height = $width;
+if ( ! empty( $dimensions[1] ) ) {
+	$height = preg_replace( '/[^\d:\.]/i', '', $dimensions[1] );
+}
+
+// Sanity check that there is only 1 colon in the dimensions to perform a ratio calculation
+if ( substr_count( $x_pieces[0], ':' ) > 1 ) {
+	die( $x_pieces[0] . ' has too many colons in the dimension paramter! There should be 1 at most.' );
+}
+
+// Can't calculate a ratio without a height
+if ( strstr( $x_pieces[0], ':' ) && ! strstr( $x_pieces[0], 'x' ) ) {
+	die( 'To calculate a ratio a height is needed.' );
+}
+
+// If one of the dimensions has a colon in it, we can calculate the aspect ratio.
+// Chances are the height will contain a ratio, so we'll check that first.
+if ( preg_match( '/:/', $height ) ) {
+
+	$ratio = explode( ':', $height );
+
+	// If we only have one ratio value set the other value to the same value of the first making it a ratio of 1
+	if ( empty( $ratio[1] ) ) {
+		$ratio[1] = $ratio[0];
+	}
+
+	if ( empty( $ratio[0] ) ) {
+		$ratio[0] = $ratio[1];
+	}
+
+	// Ensure we're dealing with numbers
+	$width    = abs( floatval( $width ) );
+	$ratio[0] = abs( floatval( $ratio[0] ) );
+	$ratio[1] = abs( floatval( $ratio[1] ) );
+
+	$height = ( $width * $ratio[1] ) / $ratio[0];
+
+} elseif ( preg_match( '/:/', $width ) ) {
+
+	$ratio = explode( ':', $width );
+	// If we only have one ratio value, set the other value to the same value of the first making it a ratio of 1
+	if ( empty( $ratio[1] ) ) {
+		$ratio[1] = $ratio[0];
+	}
+
+	if ( empty( $ratio[0] ) ) {
+		$ratio[0] = $ratio[1];
+	}
+
+	// Ensure we're dealing with numbers
+	$height   = abs( floatval( $height ) );
+	$ratio[0] = abs( floatval( $ratio[0] ) );
+	$ratio[1] = abs( floatval( $ratio[1] ) );
+
+	$width = ( $height * $ratio[0] ) / $ratio[1];
+}
+
+$width  = abs( floatval( $width ) );
+$height = abs( floatval( $height ) );
+
+// If the dimensions are too small then kill the script
+if ( $width < 1 || $height < 1 ) {
+	die( 'Too small of an image!' );
+}
+
+// Limit the size of the image to no more than an area of 33,177,600 (8K resolution)
+$area = $width * $height;
+if ( $area > 33177600 || $width > 9999 || $height > 9999 ) {
+	die( 'Too big of an image!' );
+}
+
+// Let's round the dimensions to 3 decimal places for aesthetics
+$width  = round( $width, 3 );
+$height = round( $height, 3 );
 
 // To easily manipulate colors between different formats
 require 'color.class.php';
@@ -108,67 +189,6 @@ preg_match_all( '/(gif|jpg|jpeg)/', $x, $result );
 if ( isset( $result[0] ) && isset( $result[0][0] ) && $result[0][0] ) {
 	$file_format = $result[0][0];
 }
-
-// Find the image dimensions
-if ( substr_count( $x_pieces[0], ':' ) > 1 ) {
-	die( 'Too many colons in the dimension paramter! There should be 1 at most.' );
-}
-
-if ( strstr( $x_pieces[0], ':' ) && ! strstr( $x_pieces[0], 'x' ) ) {
-	die( 'To calculate a ratio you need to provide a height!' );
-}
-// Dimensions are always the first paramter in the URL
-$dimensions = explode( 'x', $x_pieces[0] );
-
-// Filter out any characters that are not numbers, colons or decimal points
-$width  = preg_replace( '/[^\d:\.]/i', '', $dimensions[0] );
-$height = $width;
-if ( $dimensions[1] ) {
-	$height = preg_replace( '/[^\d:\.]/i', '', $dimensions[1] );
-}
-
-// If the dimensions are too small then kill the script
-if ( $width < 1 || $height < 1 ) {
-	die( 'Too small of an image!' );
-}
-
-// If one of the dimensions has a colon in it, we can calculate the aspect ratio. Chances are the height will contain a ratio, so we'll check that first.
-if ( preg_match( '/:/', $height ) ) {
-	$ratio = explode( ':', $height );
-
-	// If we only have one ratio value, set the other value to the same value of the first making it a ratio of 1
-	if ( ! $ratio[1] ) {
-		$ratio[1] = $ratio[0];
-	}
-
-	if ( ! $ratio[0] ) {
-		$ratio[0] = $ratio[1];
-	}
-
-	$height = ( $width * $ratio[1] ) / $ratio[0];
-} elseif ( preg_match( '/:/', $width ) ) {
-	$ratio = explode( ':', $width );
-	// If we only have one ratio value, set the other value to the same value of the first making it a ratio of 1
-	if ( ! $ratio[1] ) {
-		$ratio[1] = $ratio[0];
-	}
-
-	if ( ! $ratio[0] ) {
-		$ratio[0] = $ratio[1];
-	}
-
-	$width = ( $height * $ratio[0] ) / $ratio[1];
-}
-
-// Limit the size of the image to no more than an area of 16,000,000
-$area = $width * $height;
-if ( $area >= 16000000 || $width > 9999 || $height > 9999 ) {
-	die( 'Too big of an image!' );
-}
-
-// Let's round the dimensions to 3 decimal places for aesthetics
-$width  = round( $width, 3 );
-$height = round( $height, 3 );
 
 // I don't use this but if you wanted to angle your text you would change it here.
 $text_angle = 0;
