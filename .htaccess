@@ -1,10 +1,4 @@
-## IP-ABUSE-LOOKUP
-Order Allow,Deny
-Allow from All
-Deny from 12.54.148.2 124.211.10.178 64.210.63.41
-Deny from diac.ru
-
-RewriteEngine On 
+RewriteEngine On
 RewriteRule ^([\d].*) code.php?x=$1
 
 #Standard Ad Sizes http://www.iab.net/iab_products_and_industry_services/1421/1443/1452
@@ -79,7 +73,7 @@ RewriteRule ^(wvga)(.*) code.php?x=800x480$2
 RewriteRule ^(svga)(.*) code.php?x=1024x600$2
 
 #WSVGA 1024x600
-RewriteRule ^(wsvga)(.*) code.php?x=1024x600 
+RewriteRule ^(wsvga)(.*) code.php?x=1024x600
 
 #XGA 1024x768
 RewriteRule ^(xga)(.*) code.php?x=1024x768$2
