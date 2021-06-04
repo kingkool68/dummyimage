@@ -163,9 +163,9 @@ require 'color.class.php';
 
 // Find the background color which is always after the 2nd slash in the url
 $bg_color = 'ccc';
-if ( isset( $x_pieces[1] ) ) {
+if ( ! empty( $x_pieces[1] ) ) {
 	$bg_color_parts = explode( '.', $x_pieces[1] );
-	if ( isset( $bg_color_parts[0] ) && ! empty( $bg_color_parts[0] ) ) {
+	if ( ! empty( $bg_color_parts[0] ) ) {
 		$bg_color = $bg_color_parts[0];
 	}
 }
