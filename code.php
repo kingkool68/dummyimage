@@ -29,6 +29,25 @@ if ( isset( $_SERVER['HTTP_IF_MODIFIED_SINCE'] ) ) {
 	exit;
 }
 
+/**
+ * Monkey patch $_GET parameters
+ *
+ * When I first wrote this and didn't know what I was doing I passed the entire URL path
+ * of the request to the script as ?x=<stuff> via a URL rewrite. To make the text parameter
+ * work you needed to construct the URL like "&text=whatever" which would populate $_GET['text'].
+ *
+ * If you construct the URL like "?text=whatever", the text parameter will be ignored.
+ * This is intedned to fix this while maintaining backwards compatibility.
+ */
+$url_parts = parse_url( $_SERVER['REQUEST_URI'] );
+if ( ! empty( $url_parts['query'] ) ) {
+	parse_str( $url_parts['query'], $query_arr );
+
+	// Make sure we don't overwrite $_GET['x'] populated by a URL rewrite at the server level
+	unset( $query_arr['x'] );
+	$_GET = array_merge( $query_arr, $_GET );
+}
+
 // Ruquay K Calloway http://ruquay.com/sandbox/imagettf/ made a better function to find the coordinates of the text bounding box so I used it.
 function imagettfbbox_t( $size, $text_angle, $fontfile, $text ) {
 	// Compute size with a zero angle
