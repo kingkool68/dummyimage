@@ -202,9 +202,9 @@ if ( ! empty( $_GET['text'] ) ) {
 
 // Determine the file format. This can be anywhere in the URL.
 $file_format = 'png';
-preg_match_all( '/(gif|jpg|jpeg)/', $x, $result );
-if ( isset( $result[0] ) && isset( $result[0][0] ) && $result[0][0] ) {
-	$file_format = $result[0][0];
+preg_match_all( '/\.(webp|gif|jpg|jpeg)/', $x, $result );
+if ( ! empty( $result[1][0] ) ) {
+	$file_format = $result[1][0];
 }
 
 // I don't use this but if you wanted to angle your text you would change it here.
@@ -260,16 +260,29 @@ ob_start( 'process_output_buffer' );
 
 // Create the final image based on the provided file format.
 switch ( $file_format ) {
+
 	case 'gif':
 		imagegif( $img );
 		break;
+
 	case 'png':
 		imagepng( $img );
 		break;
+
+	case 'webp':
+		if ( ! function_exists( 'imagewebp' ) ) {
+			die( $file_format . ' is not supported!' );
+		}
+		imagewebp( $img );
+		break;
+
 	case 'jpg':
 	case 'jpeg':
 		imagejpeg( $img );
 		break;
+
+	default:
+		die( $file_format . ' is not supported!' );
 }
 $output = ob_get_contents();
 
