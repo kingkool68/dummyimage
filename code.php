@@ -183,6 +183,23 @@ if ( isset( $x_pieces[2] ) ) {
 $foreground = new color();
 $foreground->set_hex( $fg_color );
 
+// This is the default text string that will go right in the middle of the rectangle
+// &#215; is the multiplication sign, it is not an 'x'
+$text  = $width . ' &#215; ' . $height;
+$lines = 1;
+
+if ( ! empty( $_GET['text'] ) ) {
+	$_GET['text'] = preg_replace_callback(
+		'/(0x[0-9A-F]{,3})/ui',
+		function( $matches ) {
+			return chr( hexdec( $matches[0] ) );
+		},
+		$_GET['text']
+	);
+	$lines        = substr_count( $_GET['text'], '|' );
+	$text         = preg_replace( '/\|/i', "\n", $_GET['text'] );
+}
+
 // Determine the file format. This can be anywhere in the URL.
 $file_format = 'png';
 preg_match_all( '/(gif|jpg|jpeg)/', $x, $result );
@@ -198,32 +215,18 @@ $font = 'fonts/mplus-2c-light.ttf';
 
 // Create an image
 $img      = imageCreate( $width, $height );
-$bg_color = imageColorAllocate( $img, $background->get_rgb( 'r' ), $background->get_rgb( 'g' ), $background->get_rgb( 'b' ) );
-$fg_color = imageColorAllocate( $img, $foreground->get_rgb( 'r' ), $foreground->get_rgb( 'g' ), $foreground->get_rgb( 'b' ) );
-
-if ( empty( $_GET['text'] ) || ! isset( $_GET['text'] ) ) {
-	preg_match( '/&text=(.+)/i', $_GET['x'], $matches );
-	if ( isset( $matches[1] ) ) {
-		$_GET['text'] = urldecode( $matches[1] );
-	}
-}
-
-if ( isset( $_GET['text'] ) && $_GET['text'] ) {
-	$_GET['text'] = preg_replace_callback(
-		'/(0x[0-9A-F]{,3})/ui',
-		function( $matches ) {
-			return chr( hexdec( $matches[0] ) );
-		},
-		$_GET['text']
-	);
-	$lines        = substr_count( $_GET['text'], '|' );
-	$text         = preg_replace( '/\|/i', "\n", $_GET['text'] );
-} else {
-	$lines = 1;
-	// This is the default text string that will go right in the middle of the rectangle
-	// &#215; is the multiplication sign, it is not an 'x'
-	$text = $width . ' &#215; ' . $height;
-}
+$bg_color = imageColorAllocate(
+	$img,
+	$background->get_rgb( 'r' ),
+	$background->get_rgb( 'g' ),
+	$background->get_rgb( 'b' )
+);
+$fg_color = imageColorAllocate(
+	$img,
+	$foreground->get_rgb( 'r' ),
+	$foreground->get_rgb( 'g' ),
+	$foreground->get_rgb( 'b' )
+);
 
 // Ric Ewing: I modified this to behave better with long or narrow images and condensed the resize code to a single line
 $fontsize = max( min( $width / strlen( $text ) * 1.15, $height * 0.5 ), 5 );
