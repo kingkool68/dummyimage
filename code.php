@@ -189,15 +189,8 @@ $text  = $width . ' &#215; ' . $height;
 $lines = 1;
 
 if ( ! empty( $_GET['text'] ) ) {
-	$_GET['text'] = preg_replace_callback(
-		'/(0x[0-9A-F]{,3})/ui',
-		function( $matches ) {
-			return chr( hexdec( $matches[0] ) );
-		},
-		$_GET['text']
-	);
-	$lines        = substr_count( $_GET['text'], '|' );
-	$text         = preg_replace( '/\|/i', "\n", $_GET['text'] );
+	$lines = substr_count( $_GET['text'], '|' );
+	$text  = preg_replace( '/\|/i', "\n", $_GET['text'] );
 }
 
 // Determine the file format. This can be anywhere in the URL.
