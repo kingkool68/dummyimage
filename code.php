@@ -203,8 +203,8 @@ if ( ! empty( $result[1][0] ) ) {
 // I don't use this but if you wanted to angle your text you would change it here.
 $text_angle = 0;
 
- // If you want to use a different font simply upload the true type font (.ttf) file to the same directory as this PHP file and set the $font variable to the font file name. I'm using the M+ font which is free for distribution -> https://mplusfonts.github.io/
-$font = 'fonts/mplus2-black.ttf';
+ // If you want to use a different font simply upload the true type font (.ttf) file to the same directory as this PHP file and set the $font variable to the font file name. I'm using the M+ font which is free for distribution -> http://www.fontsquirrel.com/fonts/M-1c
+$font = 'fonts/mplus-2c-light.ttf';
 
 // Create an image
 $img      = imageCreate( $width, $height );
@@ -292,6 +292,3 @@ header( 'Content-type: image/' . $file_format );
 header( 'Content-Length: ' . strlen( $output ) );
 
 echo $output;
-
-// Free up memory
-imagedestroy( $img );
