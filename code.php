@@ -48,6 +48,16 @@ if ( ! empty( $url_parts['query'] ) ) {
 	$_GET = array_merge( $query_arr, $_GET );
 }
 
+/**
+ * Extract the text parameter from the URL
+ */
+if ( empty( $_GET['text'] ) || ! isset( $_GET['text'] ) ) {
+	preg_match( '/&text=(.+)/i', $_GET['x'], $matches );
+	if ( isset( $matches[1] ) ) {
+		$_GET['text'] = urldecode( $matches[1] );
+	}
+}
+
 // Ruquay K Calloway http://ruquay.com/sandbox/imagettf/ made a better function to find the coordinates of the text bounding box so I used it.
 function imagettfbbox_t( $size, $text_angle, $fontfile, $text ) {
 	// Compute size with a zero angle
