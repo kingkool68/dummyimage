@@ -4,11 +4,10 @@
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <meta name="monetization" content="$coil.xrptipbot.com/nvumKRswQjW3cEAkGE4b3A">
 <title>Dynamic Dummy Image Generator - DummyImage.com</title>
-<link href="css/reset.css" rel="stylesheet" media="all">
-<link href="css/dummyimage.css" rel="stylesheet" media="all">
-<link href="css/colorpicker.css" rel="stylesheet" media="all">
+<link href="css/reset.css" rel="stylesheet">
+<link href="css/dummyimage.css" rel="stylesheet">
 <link rel="shortcut icon" href="/favicon.ico">
-<script type="text/javascript">
+<script>
 if ( top != self ) { top.location.href = 'https://dummyimage.com/'; }
 
   var _gaq = _gaq || [];
@@ -16,9 +15,11 @@ if ( top != self ) { top.location.href = 'https://dummyimage.com/'; }
   _gaq.push(['_trackPageview']);
 
   (function() {
-	var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
-	ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
-	var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+		var ga = document.createElement('script');
+		ga.async = true;
+		ga.src = 'https://ssl.google-analytics.com/ga.js';
+		var s = document.getElementsByTagName('script')[0];
+		s.parentNode.insertBefore(ga, s);
   })();
 </script>
 </head>
@@ -35,11 +36,31 @@ if ( top != self ) { top.location.href = 'https://dummyimage.com/'; }
   </label>
   <span class="slash seperator">/</span>
   <label for="bgColor">Background Color
-	<input type="text" class="text" name="bgColor" id="bgColor" value="000" size="6" maxlength="6">
+	<input
+		class="text"
+		id="bgColor"
+		maxlength="7"
+		minlength="7"
+		name="bgColor"
+		placeholder="#000000"
+		size="7"
+		value="#000000"
+	  type="color"
+	>
   </label>
   <span class="slash seperator">/</span>
   <label for="fgColor">Foreground Color
-	<input type="text" class="text" name="fgColor" id="fgColor" value="fff" size="6" maxlength="6">
+	<input
+		class="text"
+		id="fgColor"
+		maxlength="7"
+		minlength="7"
+		name="fgColor"
+		placeholder="#ffffff"
+		size="7"
+		value="#ffffff"
+	  type="color"
+	>
   </label>
   <span class="period seperator">.</span>
   <label for="format">Format
@@ -398,92 +419,37 @@ if ( top != self ) { top.location.href = 'https://dummyimage.com/'; }
 <h4 id="contact">Contact</h4>
 <p>Still have questions or suggestions? <a href="http://www.russellheimlich.com/contact.html">Contact me</a>.</p>
 <div id="supported-by">
-<script async type="text/javascript" src="//cdn.carbonads.com/carbon.js?serve=CKYIK5Q7&placement=dummyimagecom" id="_carbonads_js"></script>
+<script async src="https://cdn.carbonads.com/carbon.js?serve=CKYIK5Q7&placement=dummyimagecom" id="_carbonads_js"></script>
 </div>
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/1/jquery.min.js" type="text/javascript"></script>
-<script src="js/colorpicker.js" type="text/javascript"></script>
-<script type="text/javascript">
-jQuery(document).ready(function($) {
-	$('#demo input, #demo select').change(function() {
-		updateDemo();
-	});
-
-	$('#bgColor').ColorPicker({
-		onSubmit: function(hsb, hex, rgb, el) {
-			$el = $(el);
-			$el.val(hex);
-			$el.ColorPickerHide();
-		},
-		onBeforeShow: function () {
-			$(this).ColorPickerSetColor(this.value);
-		},
-		onChange: function (hsb, hex, rgb) {
-			$('#bgColor').val(hex);
-		},
-		onHide: function (picker) {
-			var bgColor = $('.colorpicker_hex input', picker).val();
-			$('#bgColor').val(bgColor);
-			updateDemo();
-		},
-	}).bind('keyup', function(){
-		$(this).ColorPickerSetColor(this.value);
-	});
-
-	$('#fgColor').ColorPicker({
-		onSubmit: function(hsb, hex, rgb, el) {
-			$el = $(el);
-			$el.val(hex);
-			$el.ColorPickerHide();
-		},
-		onBeforeShow: function () {
-			$(this).ColorPickerSetColor(this.value);
-		},
-		onChange: function (hsb, hex, rgb) {
-			$('#fgColor').val(hex);
-		},
-		onHide: function (picker) {
-			var fgColor = $('.colorpicker_hex input', picker).val();
-			$('#fgColor').val( fgColor );
-			updateDemo();
-		},
-	}).bind('keyup', function(){
-		$(this).ColorPickerSetColor(this.value);
-	});
+<script>
+	const $ = q => document.querySelector(q)
+  const bgColor = $('#bgColor');
+	const fgColor = $('#fgColor');
+	const size = $('#size');
+	const format = $('#format');
+	const text = $('#text');
+	const previewImg = $('#preview img');
+	const preview = $('#preview');
+	const demo = $('#demo a');
 
 	function updateDemo() {
-		var url = window.location.href;
-		$('#demo input, #demo select').each(function(count) {
-			$this = $(this);
-			val = $this.val();
-			if( val ) {
-				switch(count) {
-					case 1:
-						url += '/' + val;
-					break;
-					case 2:
-						url += '/' + val;
-					break;
-					case 4:
-						var text = val;
-						text = text.replace(/#/ig, "0x23");
-						text = text.replace(/%/ig, "0x25");
-						text = text.replace(/&/ig, "0x26");
-						text = text.replace(/\+/ig, "0x2B");
-						text = text.replace(/\s/ig, '+');
-						url += '&text=' + text;
-					break;
-					default:
-						url += val;
-				}
-			}
-		});
-		$('#preview img').attr('src',url);
-		$('#preview').attr('href', url);
-		$('#demo a').attr('href',url).text(url);
+		const url = `https://dummyimage.com/${
+			size.value.trim()
+		}/${
+			bgColor.value.trim().replace('#', '')
+		}/${
+			fgColor.value.trim().replace('#', '')
+		}${
+			format.value
+		}${
+			text.value ? '?' + new URLSearchParams({text: text.value}) : ''
+		}`
+
+		previewImg.src = preview.href = demo.href = demo.innerText = url;
 	}
 
 	updateDemo();
-});
+	;[bgColor, fgColor, size, format, text].forEach(elm => elm.onchange = updateDemo);
 </script>
 </body>
 </html>
