@@ -2,104 +2,142 @@ RewriteEngine On
 RewriteRule ^([\d].*) code.php?x=$1
 
 #Standard Ad Sizes http://www.iab.net/iab_products_and_industry_services/1421/1443/1452
+# https://iabtechlab.com/wp-content/uploads/2016/03/IAB_Display_Mobile_Creative_Guidelines_HTML5_2015.pdf
+# Interactive Marketing Units (IMU)
+# Universal Ad Package (UAP)
 
-#Medium Rectangle 300x250
-RewriteRule ^(me)\w+(rec\w+)(.*) code.php?x=300x250$3
-
-#Square Pop Up 250x250
+# IMU/UAB Medium Rectangle 300x250
+RewriteRule ^(me?d?\w+rect?\w+)(.*) code.php?x=300x250$2
+# IMU Square Pop Up 250x250
 RewriteRule ^(s\w+pop)(.*) code.php?x=250x250$2
-
-#Vertical Rectangle 240x400
-RewriteRule ^(ver)\w+(rec)(.*) code.php?x=240x400$3
-
-#Large Rectangle 336x280
-RewriteRule ^(large|lrg)(rec)(.*) code.php?x=336x280$3
-
-#Rectangle 180x150
-RewriteRule ^(rec)(.*) code.php?x=180x150$2
-
-#Pop Under 720x300
+# IMU Vertical Rectangle 240x400
+RewriteRule ^(ver\w+rect?)(.*) code.php?x=240x400$2
+# IMU Large Rectangle 336x280
+RewriteRule ^(large|lrg)(rect?)(.*) code.php?x=336x280$3
+# IMU/UAB Rectangle 180x150
+RewriteRule ^(rect?)(.*) code.php?x=180x150$2
+# Pop Under 720x300
 RewriteRule ^(pop)(.*) code.php?x=720x300$2
-
-#Full Banner 468x60
+# IMU Full Banner 468x60
 RewriteRule ^(f\w+ban)(.*) code.php?x=468x60$2
-
-#Half Banner 234x60
+# IMU Half Banner 234x60
 RewriteRule ^(h\w+ban)(.*) code.php?x=234x60$2
-
-#Micro Bar 88x31
+# IMU Micro Button, Micro Bar 88x31
 RewriteRule ^(m\w+bar)(.*) code.php?x=88x31$2
-
-#Button 1 120x90
+# IMU Button 1 120x90
 RewriteRule ^(b\w+1)(.*) code.php?x=120x90$2
-
-#Button 2 120x60
+# IMU Button 2 120x60
 RewriteRule ^(b\w+2)(.*) code.php?x=120x60$2
-
-#Vertical Banner 120x240
+# IMU Vertical Banner 120x240
 RewriteRule ^(ver\w+ban)(.*) code.php?x=120x240$2
-
-#Square Button 125x125
+# IMU Square Button 125x125
 RewriteRule ^(s\w+but)(.*) code.php?x=125x125$2
-
-#Leaderboard 728x90
+# UAP Leaderboard 728x90
 RewriteRule ^(lea\w+rd)(.*) code.php?x=728x90$2
-
-#Wide Skyscraper 160 x 600
+# Pushdown, Super Leaderboard 970x90 or 970x66
+# IMU/UAB Wide Skyscraper 160 x 600
 RewriteRule ^(w\w+sk\w+r)(.*) code.php?x=160x600$2
-
-#Skyscraper 120 x 600
+# IMU Skyscraper 120 x 600
 RewriteRule ^(sk\w+r)(.*) code.php?x=120x600$2
-
-#Half Page Ad 300 x 600
+# Half Page Ad 300 x 600
 RewriteRule ^(h\w+g)(.*) code.php?x=300x600$2
+# Billboard 970x250
+# Filmstrip 300x600
+# Portrait 300x1050 or 300x350
+# Sidekick 300x250, 300x600 or 970x250
+# Adhesion Banner, Pull, Slider = Smartphone Static Wide Banner 320x50
+# Smartphone Static Banner 300x50
+# Pop Up 300x250
+# Large Pop Up 550x480
 
+# Display Standards - https://en.wikipedia.org/wiki/Graphics_display_resolution
 
-#Display Standards - http://en.wikipedia.org/wiki/File:Vector_Video_Standards2.svg
-
-#CGA 320x200
+# QQVGA 160x120
+RewriteRule ^(qqvga)(.*) code.php?x=160x120$2
+# HQVGA 240x160
+RewriteRule ^(hqvga)(.*) code.php?x=240x160$2
+# CGA 320x200
 RewriteRule ^(cga)(.*) code.php?x=320x200$2
-
-#QVGA 320x240
+# QVGA 320x240
 RewriteRule ^(qvga)(.*) code.php?x=320x240$2
-
-#VGA 640x480
+# WQVGA 360x240, also 384x240 or 400x240
+RewriteRule ^(wqvga)(.*) code.php?x=360x240$2
+# HVGA 480x320
+RewriteRule ^(hvga)(.*) code.php?x=480x320$2
+# VGA 640x480
 RewriteRule ^(vga)(.*) code.php?x=640x480$2
-
-#WVGA 800x480
+# WVGA 800x480, also 720x640, 768x640
 RewriteRule ^(wvga)(.*) code.php?x=800x480$2
-
-#SVGA 1024x600
-RewriteRule ^(svga)(.*) code.php?x=1024x600$2
-
-#WSVGA 1024x600
-RewriteRule ^(wsvga)(.*) code.php?x=1024x600
-
-#XGA 1024x768
-RewriteRule ^(xga)(.*) code.php?x=1024x768$2
-
-#WXGA 1280x800
+# SVGA 800x600
+RewriteRule ^(svga)(.*) code.php?x=800x600$2
+# DVGA 960x640
+RewriteRule ^(dvga)(.*) code.php?x=960x640$2
+# WSVGA 1024x600, also 1024x576
+RewriteRule ^(wsvga)(.*) code.php?x=1024x600$2
+# XGA 1024x768
+RewriteRule ^(xga[^+]?)(.*) code.php?x=1024x768$2
+# XGA+ 1152x864
+RewriteRule ^(xga\+)(.*) code.php?x=1152x864$2
+# WXGA 1280x800, also 1280x768
 RewriteRule ^(wxga)(.*) code.php?x=1280x800$2
-
-#WSXGA 1440x900
+# SXGA- 1280x960
+RewriteRule ^(sxga-)(.*) code.php?x=1280x960$2
+# SXGA 1280x1024
+RewriteRule ^(sxga[^+-]?)(.*) code.php?x=1280x1024$2
+# FWXGA, WXGA+ 1366x768
+#RewriteRule ^(fwxga|wxga\+)(.*) code.php?x=1366x768$2
+# SXGA+ 1400x1050
+RewriteRule ^(sxga\+)(.*) code.php?x=1400x1050$2
+# WSXGA 1440x900
 RewriteRule ^(wsxga)(.*) code.php?x=1440x900$2
-
-#WUXGA 1920x1200
+# UXGA 1600x1200
+RewriteRule ^(uxga)(.*) code.php?x=1600x1200$2
+# WSXGA+ 1680x1050
+#RewriteRule ^(wsxga\+)(.*) code.php?x=1680x1050$2
+# WUXGA 1920x1200
 RewriteRule ^(wuxga)(.*) code.php?x=1920x1200$2
-
-#WQXGA 2560x1600
+# QXGA 2048x1536
+RewriteRule ^(qxga)(.*) code.php?x=2048x1536$2
+# WQXGA 2560x1600
 RewriteRule ^(wqxga)(.*) code.php?x=2560x1600$2
 
-#Video Standards
+# Video Standards
 
-#NTSC 720x480
+# nHD 640x360
+RewriteRule ^(nhd)(.*) code.php?x=640x360$2
+# qHD 960x540
+RewriteRule ^(qhd)(.*) code.php?x=960x540$2
+# NTSC 720x480
 RewriteRule ^(ntsc)(.*) code.php?x=720x480$2
-
-#PAL 768x576
+# PAL, SDTV 768x576
 RewriteRule ^(pal)(.*) code.php?x=768x576$2
-
-#HD720 1280x720
-RewriteRule ^(hd720)(.*) code.php?x=1280x720$2
-
-#HD1080 1920x1080
-RewriteRule ^(hd1080)(.*) code.php?x=1920x1080$2
+# ED, HD480 854x480
+RewriteRule ^(ed|hd480)(.*) code.php?x=854x480$2
+# HD576 1024x576
+RewriteRule ^(ed|hd576)(.*) code.php?x=1024x576$2
+# HD720 1280x720
+RewriteRule ^(hd720|hdr?)([^+]?.*) code.php?x=1280x720$2
+# HD+, HD900 1600x900
+RewriteRule ^(hd\+|hd900)(.*) code.php?x=1600x900$2
+# FullHD, HD1080 1920x1080
+RewriteRule ^(hd1080|f\w*hd|hdtv)(.*) code.php?x=1920x1080$2
+# DCI 2K 2048x1080
+RewriteRule ^(2k)(.*) code.php?x=2048x1080$2
+# WFHD 2160x1080
+RewriteRule ^(wf?hd)(.*) code.php?x=2160x1080$2
+# UWFHD 2560x1080
+RewriteRule ^(uwf?hd)(.*) code.php?x=2560x1080$2
+# WQHD, HD1440 2560x1440
+RewriteRule ^(wqhd|hd1440)(.*) code.php?x=2560x1440$2
+# QHD+, HD1800 3200x1800
+RewriteRule ^(qhd\+|hd1800)(.*) code.php?x=3200x1800$2
+# UWQHD 3440x1440
+RewriteRule ^(uwqhd)(.*) code.php?x=3440x1440$2
+# 4K, UHD 3840x2160
+RewriteRule ^(4k|uhd|hd2160)(.*) code.php?x=3840x2160$2
+# WUHD 5120x2160
+RewriteRule ^(5k2k|wuhd)(.*) code.php?x=5120x2160$2
+# 5K 5120x2880
+RewriteRule ^(5k|hd2880)(.*) code.php?x=5120x2880$2
+# 8K, UHD 7680x4320
+RewriteRule ^(8k|f\w*uhd|hd4320)(.*) code.php?x=7680x4320$2
