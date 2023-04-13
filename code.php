@@ -276,6 +276,7 @@ switch ( $file_format ) {
 		if ( ! function_exists( 'imagewebp' ) ) {
 			die( $file_format . ' is not supported!' );
 		}
+		imagepalettetotruecolor( $img );
 		imagewebp( $img );
 		break;
 
