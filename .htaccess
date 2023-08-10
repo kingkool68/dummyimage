@@ -1,2 +1,8 @@
-RewriteEngine On
-RewriteRule ^([\d].*) code.php?x=$1
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+    RewriteBase /
+    RewriteRule ^index\.php$ - [L]
+    RewriteCond %{REQUEST_FILENAME} !-f
+    RewriteCond %{REQUEST_FILENAME} !-d
+    RewriteRule (.*) /code.php?x=$1 [L]
+</IfModule>
