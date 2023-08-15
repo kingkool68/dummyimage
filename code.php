@@ -88,6 +88,80 @@ $x_pieces = explode( '/', $x );
 /**
  * Find the dimensions
  */
+// Translate image size keywords to dimensions
+$keywords = array(
+	// IAB Standard ad sizes
+	'mediumrectangle'   => '300×250',
+	'medrect'           => '300x250',
+	'squarepopup'       => '250×250',
+	'sqrpop'            => '250×250',
+	'verticalrectangle' => '240×400',
+	'vertrec'           => '240×400',
+	'largerectangle'    => '336×280',
+	'lrgrec'            => '336×280',
+	'rectangle'         => '180×150',
+	'rec'               => '180×150',
+	'popunder'          => '720×300',
+	'pop'               => '720×300',
+	'fullbanner'        => '468×60',
+	'fullban'           => '468×60',
+	'halfbanner'        => '234×60',
+	'halfban'           => '234×60',
+	'microbar'          => '88×31',
+	'mibar'             => '88×31',
+	'button1'           => '120×90',
+	'but1'              => '120×90',
+	'button2'           => '120×60',
+	'but2'              => '120×60',
+	'verticalbanner'    => '120×240',
+	'vertban'           => '120×240',
+	'squarebutton'      => '125x125',
+	'sqrbut'            => '125x125',
+	'leaderboard'       => '728×90',
+	'leadbrd'           => '728×90',
+	'wideskyscraper'    => '160×600',
+	'wiskyscrpr'        => '160×600',
+	'skyscraper'        => '120×600',
+	'skyscrpr'          => '120×600',
+	'halfpage'          => '300×600',
+	'hpge'              => '300×600',
+
+	// Computer display standards via https://en.wikipedia.org/wiki/Computer_display_standard
+	'cga'   => '320x200',
+	'qvga'  => '320x240',
+	'vga'   => '640x480',
+	'wvga'  => '800x480',
+	'svga'  => '800x600',
+	'wsvga' => '1024x600',
+	'xga'   => '1024x768',
+	'wxga'  => '1280x800',
+	'sxga'  => '1280x1024',
+	'wsxga' => '1440x900',
+	'uxga'  => '1600x1200',
+	'wuxga' => '1920x1200',
+	'qxga'  => '2048x1536',
+	'wqxga' => '2560x1600',
+	'qsxga' => '2560×2048',
+	'wqsxga' => '3200×2048',
+	'quxga'  => '3200×2400',
+	'wquxga' => '3840×2400',
+
+	// Video Standards
+	'ntsc'   => '720x480',
+	'pal'    => '768x576',
+	'hd720'  => '1280x720',
+	'720p'   => '1280x720',
+	'hd1080' => '1920x1080',
+	'1080p'  => '1920x1080',
+	'2k'     => '2560x1440',
+	'4k'     => '3840x2160',
+);
+$image_size_keyword = '';
+if ( ! empty( $keywords[ $x_pieces[0] ] ) ) {
+	$image_size_keyword = $x_pieces[0];
+	$x_pieces[0] = $keywords[ $x_pieces[0] ];
+}
+
 // Dimensions are always the first paramter in the URL
 $dimensions = explode( 'x', $x_pieces[0] );
 
