@@ -272,7 +272,7 @@ $foreground->set_hex( $fg_color );
 $text  = $width . ' &#215; ' . $height;
 $lines = 1;
 
-if ( ! empty( $_GET['text'] ) ) {
+if ( ! empty( $_GET['text'] ) || $_GET['text'] === '0' ) {
 	$lines = substr_count( $_GET['text'], '|' );
 	$text  = preg_replace( '/\|/i', "\n", $_GET['text'] );
 }
