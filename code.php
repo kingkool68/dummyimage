@@ -79,6 +79,64 @@ function imagettfbbox_t( $size, $text_angle, $fontfile, $text ) {
 	return $ret;
 }
 
+/**
+ * Convert a hex string to red, green, blue, and alpha values between 0 - 255.
+ *
+ * Accepts a 1, 2, 3, 4, 6, and 8 digit hex code.
+ *
+ * The alpha transparency can be set with :50 at the end of the hex string.
+ *
+ *  #ccc:50 would be R = 204, G = 204, B = 204, Alpha = 128 (or 50%)
+ *  Same thing for #cccccc80
+ *
+ * @param  string $hex The hex string to convert
+ */
+function hex2rgba( $hex = '' ) {
+    $hex        = strtolower( $hex );
+    $hex        = str_replace( '#', '', $hex );
+    $hex_parts  = explode( ':', $hex );
+    $hex        = $hex_parts[0];
+    $hex_length = strlen( $hex );
+    $input      = $hex;
+    switch ($hex_length) {
+        case 1:
+            $hex = $input . $input . $input . $input . $input . $input;
+            break;
+        case 2:
+            $hex = $input[0] . $input[1] . $input[0] . $input[1] . $input[0] . $input[1];
+            break;
+        case 3:
+            $hex = $input[0] . $input[0] . $input[1] . $input[1] . $input[2] . $input[2];
+            break;
+        case 4:
+            $hex = $input[0] . $input[0] . $input[1] . $input[1] . $input[2] . $input[2] . $input[3] . $input[3];
+            break;
+    }
+    // Set the alpha level to 100% for 6 character hex codes
+    if ( strlen( $hex ) === 6 ) {
+        $hex .= 'ff';
+    }
+    $parts = str_split( $hex, 2 );
+    $alpha = $parts[3];
+    $alpha = hexdec( $alpha );
+    $alpha_percent = round( $alpha / 255, 2 );
+    if ( isset( $hex_parts[1] ) ) {
+        $user_supplied_alpha = $hex_parts[1];
+        $user_supplied_alpha = abs( (int) $user_supplied_alpha );
+        $user_supplied_alpha = min( $user_supplied_alpha, 100 );
+        $alpha_percent = $user_supplied_alpha / 100;
+        $alpha = round( $alpha_percent * 255 );
+    }
+
+    return (object) array(
+        'r'             => hexdec( $parts[0] ),
+        'g'             => hexdec( $parts[1] ),
+        'b'             => hexdec( $parts[2] ),
+        'alpha'         => (int) $alpha,
+        'alpha_percent' => $alpha_percent,
+    );
+}
+
 // Get the query string from the URL. x would = 600x400 if the url was https://dummyimage.com/600x400
 $x = strtolower( $_GET['x'] );
 // Strip / if it's the first character
@@ -242,9 +300,6 @@ if ( $area > 33177600 || $width > 9999 || $height > 9999 ) {
 $width  = round( $width, 3 );
 $height = round( $height, 3 );
 
-// To easily manipulate colors between different formats
-require 'color.class.php';
-
 // Find the background color which is always after the 2nd slash in the url
 $bg_color = 'ccc';
 if ( ! empty( $x_pieces[1] ) ) {
@@ -253,8 +308,7 @@ if ( ! empty( $x_pieces[1] ) ) {
 		$bg_color = $bg_color_parts[0];
 	}
 }
-$background = new color();
-$background->set_hex( $bg_color );
+$background = hex2rgba( $bg_color );
 
 // Find the foreground color which is always after the 3rd slash in the url
 $fg_color = '000';
@@ -264,8 +318,7 @@ if ( isset( $x_pieces[2] ) ) {
 		$fg_color = $fg_color_parts[0];
 	}
 }
-$foreground = new color();
-$foreground->set_hex( $fg_color );
+$foreground = hex2rgba( $fg_color );
 
 // This is the default text string that will go right in the middle of the rectangle
 // &#215; is the multiplication sign, it is not an 'x'
@@ -292,17 +345,22 @@ $font = 'fonts/mplus-2c-light.ttf';
 
 // Create an image
 $img      = imageCreate( $width, $height );
-$bg_color = imageColorAllocate(
+$bg_alpha = 127 - ( $background->alpha >> 1);
+$bg_color = imagecolorallocatealpha(
 	$img,
-	$background->get_rgb( 'r' ),
-	$background->get_rgb( 'g' ),
-	$background->get_rgb( 'b' )
+	$background->r,
+	$background->g,
+	$background->b,
+	$bg_alpha
 );
-$fg_color = imageColorAllocate(
+
+$fg_alpha = 127 - ( $foreground->alpha >> 1);
+$fg_color = imagecolorallocatealpha(
 	$img,
-	$foreground->get_rgb( 'r' ),
-	$foreground->get_rgb( 'g' ),
-	$foreground->get_rgb( 'b' )
+	$foreground->r,
+	$foreground->g,
+	$foreground->b,
+	$fg_alpha
 );
 
 // Ric Ewing: I modified this to behave better with long or narrow images and condensed the resize code to a single line
